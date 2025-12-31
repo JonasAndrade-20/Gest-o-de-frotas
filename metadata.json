@@ -1,0 +1,7 @@
+{
+  "name": "Fleet AI Manager",
+  "description": "Uma plataforma moderna e minimalista para gestão de frotas com inteligência artificial para análise de custos e manutenção.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
