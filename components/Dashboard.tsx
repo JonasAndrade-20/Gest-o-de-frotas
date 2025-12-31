@@ -108,16 +108,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ vehicles, maintenance, fue
 
   const fuelChartData = groupAndSortByMonth(fuelRecords, 'date', 'totalCost').slice(-6);
 
-  /**
-   * CÁLCULO REVISADO KM/L:
-   * (Hodômetro Final - Hodômetro Inicial) / (Soma dos litros a partir do segundo registro)
-   */
   const vehicleEfficiencyData = vehicles.map(v => {
     const records = fuelRecords
       .filter(f => f.vehicleId === v.id)
       .sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     
-    // Formato modelo-placa conforme solicitado
     const label = `${v.model}-${v.plate}`;
     
     if (records.length < 2) return { name: label, kml: 0 };
@@ -126,7 +121,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ vehicles, maintenance, fue
     const kmEnd = records[records.length - 1].odometer;
     const distance = kmEnd - kmStart;
     
-    // Soma litros excluindo o primeiro (referente à quilometragem anterior ao rastreio)
     const litersAfterFirst = records.slice(1).reduce((sum, r) => sum + r.liters, 0);
     
     const kml = (litersAfterFirst > 0 && distance > 0) ? (distance / litersAfterFirst) : 0;
@@ -148,7 +142,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ vehicles, maintenance, fue
     return v ? `${v.plate}` : '---';
   };
 
-  // Estilo comum para os Tooltips
   const commonTooltipProps = {
     contentStyle: { 
       borderRadius: '16px', 
@@ -318,21 +311,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ vehicles, maintenance, fue
             <PieChart>
               <Pie 
                 data={statusChartData} 
-                innerRadius={80} 
-                outerRadius={110} 
+                innerRadius={70} 
+                outerRadius={100} 
                 paddingAngle={8} 
                 dataKey="value" 
                 stroke="none"
                 label={({ name, value }) => `${name}: ${value}`}
               >
                 {statusChartData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                <LabelList dataKey="value" position="outside" style={{ fontSize: '12px', fontWeight: 'bold' }} />
               </Pie>
               <Tooltip 
                 {...commonTooltipProps}
                 formatter={(value: number) => [value, 'Quantidade']}
               />
-              <Legend verticalAlign="bottom" height={40} iconType="circle" />
+              <Legend verticalAlign="bottom" height={36} iconType="circle" />
             </PieChart>
           </ResponsiveContainer>
         </div>
