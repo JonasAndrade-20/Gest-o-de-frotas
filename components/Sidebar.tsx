@@ -1,21 +1,30 @@
 import React from 'react';
 import { ViewState } from '../types';
-import { LayoutDashboard, Car, Wrench, Settings, LogOut, Fuel } from 'lucide-react';
+import { LayoutDashboard, Car, Wrench, Settings, LogOut, Fuel, CalendarDays, Users } from 'lucide-react';
 
 interface SidebarProps {
   currentView: ViewState;
   setView: (view: ViewState) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onLogout: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, isOpen, setIsOpen }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, isOpen, setIsOpen, onLogout }) => {
   const navItems = [
     { id: 'DASHBOARD', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'VEHICLES', label: 'Veículos', icon: Car },
+    { id: 'DRIVERS', label: 'Motoristas', icon: Users },
     { id: 'MAINTENANCE', label: 'Manutenção', icon: Wrench },
+    { id: 'PLANNER', label: 'Planejador', icon: CalendarDays },
     { id: 'FUEL', label: 'Abastecimento', icon: Fuel },
   ];
+
+  const handleLogout = () => {
+    if (confirm("Deseja realmente sair da plataforma?")) {
+      onLogout();
+    }
+  };
 
   return (
     <>
@@ -56,11 +65,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, isOpen, 
         </nav>
 
         <div className="absolute bottom-4 left-0 w-full px-4">
-          <button className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-slate-400 hover:bg-slate-800 dark:hover:bg-slate-800 hover:text-white transition-colors">
+          <button 
+            onClick={() => {
+              setView('SETTINGS');
+              setIsOpen(false);
+            }}
+            className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors mb-2
+              ${currentView === 'SETTINGS' 
+                ? 'bg-slate-800 text-white' 
+                : 'text-slate-400 hover:bg-slate-800 dark:hover:bg-slate-800 hover:text-white'
+              }`}
+          >
             <Settings size={20} />
             Configurações
           </button>
-          <button className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-red-400 hover:bg-slate-800 dark:hover:bg-slate-800 hover:text-red-300 transition-colors">
+          <button 
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-red-400 hover:bg-slate-800 dark:hover:bg-slate-800 hover:text-red-300 transition-colors"
+          >
             <LogOut size={20} />
             Sair
           </button>
